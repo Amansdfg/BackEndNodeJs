@@ -6,29 +6,14 @@ import Window from "./components/Window.jsx";
 export default function App(){
     const[isModalOpen,setIsModalOpen]=useState(false);
     const[meals,setMeals]=useState([]);
-    const[cart,setCart]=useState([]);
+
     const[error,setError]=useState(false);
     const[isLoading,setIsLoading]=useState(false);
+    console.log("app");
     function closeModal(){
         setIsModalOpen(false);
     }
-    function handleAddToCart(item){    
-      const found = cart.find((product)=>product.id===item.id);
-      if(found){
-        found.count++;        
-        return;
-      }
-      setCart((prev)=>{
-        return[
-          {
-            ...item,
-            count:1
-          },
-          ...prev,
-  
-        ]
-      })
-    }
+
     useEffect(()=>{
         setIsLoading(true);
         fetch("http://localhost:3000/meals").
@@ -64,9 +49,9 @@ export default function App(){
   return(
     <>
       <Modal open={isModalOpen}>
-          <Window cart={cart} onClose={closeModal} onAdd={handleAddToCart}/>
+          <Window onClose={closeModal}/>
         </Modal>
-      <Header onOpen={setIsModalOpen} quantity={cart.length}/>
+      <Header onOpen={setIsModalOpen} quantity={quantity}/>
       <Meals meals={meals} addToCart={handleAddToCart}/>
     </>
   )
