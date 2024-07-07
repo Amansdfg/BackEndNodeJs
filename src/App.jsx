@@ -2,6 +2,7 @@ import Header from "./components/Header.jsx";
 import {useState,useEffect} from "react";
 import Meals from "./components/Meals.jsx";
 import Modal from "./components/Modal.jsx";
+import Window from "./components/Window.jsx";
 export default function App(){
     const[isModalOpen,setIsModalOpen]=useState(false);
     const[meals,setMeals]=useState([]);
@@ -11,16 +12,21 @@ export default function App(){
     function closeModal(){
         setIsModalOpen(false);
     }
-    function handleAddToCart(item){
-      if(cart.includes(item)){
+    function handleAddToCart(item){    
+      const found = cart.find((product)=>product.id===item.id);
+      if(found){
+        found.count++;        
         return;
       }
       setCart((prev)=>{
         return[
+          {
+            ...item,
+            count:1
+          },
           ...prev,
-          item
+  
         ]
-
       })
     }
     useEffect(()=>{
@@ -41,29 +47,26 @@ export default function App(){
                 setError(true);
             })
     },[])
+  if(isLoading){
+      return(
+        <div>
+          Loading
+        </div>
+      )
+    }
+    if(error){
+      return(
+        <div>
+          Error
+        </div>
+      )
+    }
   return(
     <>
       <Modal open={isModalOpen}>
-            <div className="cart">
-                <h2>Your cart</h2>
-                <ul>
-                  {cart.map((item)=>(
-                    <li key={item.id} className="cart-item">
-                      {item.name}
-                      <div className="cart-item-actions">
-                        <button>-</button>
-                        <button>+</button>
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-            </div>
-            <div className="modal-actions">
-              <button onClick={()=>closeModal()}>Close</button>
-              <button className="button">Go to Checkout</button>
-            </div>
+          <Window cart={cart} onClose={closeModal} onAdd={handleAddToCart}/>
         </Modal>
-      <Header onOpen={setIsModalOpen}/>
+      <Header onOpen={setIsModalOpen} quantity={cart.length}/>
       <Meals meals={meals} addToCart={handleAddToCart}/>
     </>
   )

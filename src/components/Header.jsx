@@ -1,5 +1,5 @@
 import logo from "../assets/logo.jpg"
-export default function Header({onOpen}){
+export default function Header({onOpen,quantity}){
     return(
         <header id="main-header">
             <div id="title">
@@ -7,7 +7,7 @@ export default function Header({onOpen}){
                 <h1>Reactfood</h1>
             </div>
             <nav>
-                <button onClick={()=>onOpen(true)}>Cart</button>
+                <button className="text-button" onClick={()=>onOpen(true)}>Cart ({quantity})</button>
             </nav>
         </header>
     )
