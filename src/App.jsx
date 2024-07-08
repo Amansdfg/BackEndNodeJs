@@ -6,7 +6,6 @@ import Window from "./components/Window.jsx";
 export default function App(){
     const[isModalOpen,setIsModalOpen]=useState(false);
     const[meals,setMeals]=useState([]);
-
     const[error,setError]=useState(false);
     const[isLoading,setIsLoading]=useState(false);
     console.log("app");
