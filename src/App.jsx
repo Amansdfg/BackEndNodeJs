@@ -9,10 +9,34 @@ export default function App(){
     const[error,setError]=useState(false);
     const[isLoading,setIsLoading]=useState(false);
     console.log("app");
+    const[cart,setCart]=useState([]);
+    const quantity=cart.reduce((acc,curr)=>acc+curr.count,0);
+    function handleRemoveToCart(id){
+      const item = cart.find(product => product.id === id);
+      if (item) {
+          item.count--;
+          setCart([...cart.filter(product => product.count > 0)]);
+      }
+      }
+
+    function handleAddToCart(item) {    
+      const found = cart.find(product => product.id === item.id);
+      if (found) {
+        found.count++;
+        setCart([...cart]);
+      } else {
+        setCart(prev => [
+      {
+        ...item,
+        count: 1
+      },
+        ...prev,
+      ]);
+      }
+    }
     function closeModal(){
         setIsModalOpen(false);
     }
-
     useEffect(()=>{
         setIsLoading(true);
         fetch("http://localhost:3000/meals").
@@ -48,7 +72,7 @@ export default function App(){
   return(
     <>
       <Modal open={isModalOpen}>
-          <Window onClose={closeModal}/>
+          <Window onClose={closeModal} cart={cart} onAdd={handleAddToCart} onRemove={handleRemoveToCart}/>
         </Modal>
       <Header onOpen={setIsModalOpen} quantity={quantity}/>
       <Meals meals={meals} addToCart={handleAddToCart}/>
