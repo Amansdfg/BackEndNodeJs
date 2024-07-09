@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import {currencyFormatter} from "../formatting.js";
 
-function Window({cart,onClose ,onAdd,onRemove}) {
+function Window({cart,onClose ,onAdd,onRemove,openCheckOut}) {
     const totalSum=cart.reduce((acc,curr)=>acc+(curr.price*curr.count),0);
     console.log(totalSum)
     console.log("window");
@@ -30,7 +30,7 @@ function Window({cart,onClose ,onAdd,onRemove}) {
             </div>
             <div className="modal-actions">
                 <button onClick={onClose}>Close</button>
-                <button className="button">Go to Checkout</button>
+                <button onClick={()=>openCheckOut()} className="button">Go to Checkout</button>
             </div>
         </>
     );

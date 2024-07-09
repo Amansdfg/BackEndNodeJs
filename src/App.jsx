@@ -3,9 +3,12 @@ import {useState,useEffect} from "react";
 import Meals from "./components/Meals.jsx";
 import Modal from "./components/Modal.jsx";
 import Window from "./components/Window.jsx";
+import Checkout from "./components/Checkout.jsx";
+import Success from "./components/Success.jsx";
 export default function App(){
     const[isModalOpen,setIsModalOpen]=useState(false);
     const[isCheckoutOpen,setIsCheckoutOpen]=useState(false);
+    const[isSuccess,setIsSuccess]=useState(false);
     const[meals,setMeals]=useState([]);
     const[error,setError]=useState(false);
     const[isLoading,setIsLoading]=useState(false);
@@ -40,7 +43,13 @@ export default function App(){
       setIsModalOpen(false);
     }
     function closeModal(){
-        setIsModalOpen(false);
+      setIsModalOpen(false);
+      setIsCheckoutOpen(false);
+      setIsSuccess(false);
+    }
+    function handleSuccess(){
+      setIsSuccess(true);
+      setIsCheckoutOpen(false);
     }
     useEffect(()=>{
         setIsLoading(true);
@@ -76,8 +85,10 @@ export default function App(){
     }
   return(
     <>
-      <Modal open={isModalOpen}>
-          <Window onClose={closeModal} cart={cart} onAdd={handleAddToCart} onRemove={handleRemoveToCart}/>
+      <Modal open={isModalOpen ||isCheckoutOpen||isSuccess}>
+          {isModalOpen && <Window onClose={closeModal} cart={cart} onAdd={handleAddToCart} onRemove={handleRemoveToCart} openCheckOut={handleOpenCheckout}/>}
+          {isCheckoutOpen && <Checkout onClose={closeModal} openSuccess={handleSuccess}/>}
+          {isSuccess && <Success onClose={closeModal}/>}
         </Modal>
       <Header onOpen={setIsModalOpen} quantity={quantity}/>
       <Meals meals={meals} addToCart={handleAddToCart}/>
